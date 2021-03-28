@@ -337,72 +337,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // При загрузке страницы определяем количество слайдов и записываем в индексе и отображаем нидекс 1
     // Индекс меньше 10 добавляем 0
 
-     const getSlider = document.querySelector('div .offer__slider'),
-           current = getSlider.querySelector('#current'),
-           total = getSlider.querySelector('#total'),
-           slides = getSlider.querySelectorAll('.offer__slide'),
-           prev = getSlider.querySelector('.offer__slider-prev'),
-           next = getSlider.querySelector('.offer__slider-next');
+     const slides = document.querySelectorAll('.offer__slide'),
+           prev = document.querySelector('.offer__slider-prev'),
+           next = document.querySelector('.offer__slider-next'),
+           total = document.querySelector('#total'),
+           current = document.querySelector('#current');
 
-    let tot = slides.length;
-    let num = 0;
-    // console.log(tot);
+    let slideIndex = 1;
 
+    showSlides(slideIndex);
 
-    function sliders(e = 0) {
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
 
-        if (tot < 10) {
-            total.innerHTML = '0' + tot;
-        } else {
-            total.innerHTML = tot;
+    function showSlides(n) {
+
+        if (n > slides.length) {
+            slideIndex = 1;
         }
-        slides.forEach(item => {
-            item.classList.add('hide');
-            item.classList.remove('show');
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
 
-        });
+        slides.forEach(item => item.style.display= 'none');
+        slides[slideIndex - 1].style.display = 'block';
 
-        current.innerHTML = e + 1;
-            if (current.innerHTML < 10) {
-                current.innerHTML ='0' + current.innerHTML;
-            }
 
-        slides[e].classList.remove('hide');
-            // slides[i].classList.add('show');
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
 
     }
 
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
     prev.addEventListener('click', () => {
-        current.innerHTML = current.innerHTML - 1;
-        if (current.innerHTML <= 0) {
-            current.innerHTML = '0' + 4;
-        } else if (current.innerHTML < 10) {
-            current.innerHTML ='0' + current.innerHTML;
-        }
-        num = num - 1;
-        if (num < 0) {
-            num = tot - 1;
-        }
-        sliders(num);
+        plusSlides(-1);
     });
 
     next.addEventListener('click', () => {
-        current.innerHTML = parseInt(current.innerHTML) + 1;
-        if (parseInt(current.innerHTML) > tot) {
-            current.innerHTML = '0' + 1;
-        } else  if (current.innerHTML < 10) {
-            current.innerHTML ='0' + current.innerHTML;
-        }
-
-        num = num + 1;
-
-        if (num > (tot - 1)) {
-            num = 0;
-        }
-
-        sliders(num);
+        plusSlides(1);
     });
-
-    sliders();
     
 });
